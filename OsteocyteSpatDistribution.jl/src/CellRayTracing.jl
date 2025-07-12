@@ -1,4 +1,3 @@
-
 function generate_cell_from_Ellipse(e::Ellipse, num_boundary_points=100)
     θ = range(0, 2π, length=num_boundary_points)
     a, b = e.axes
@@ -86,12 +85,13 @@ function store_intersecting_rays(cells::Vector{Ellipse}, max_distance=50, R=1.0)
     return all_intersecting_rays
 end
 
-intersecting_rays = store_intersecting_rays(cells)
-
-for rays_from_cell in intersecting_rays
-    for ray in rays_from_cell
-        x = [ray[1][1], ray[2][1]]
-        y = [ray[1][2], ray[2][2]]
-        lines!(ax, x, y, color=:red, alpha=0.5)
+function calc_ray_lengths(intersecting_rays::Vector{Any})
+    ray_lengths = []
+    for rays_from_cell in intersecting_rays
+        for ray in rays_from_cell
+            length = norm(ray[2] - ray[1])
+            push!(ray_lengths, length)
+        end
     end
+    return ray_lengths
 end

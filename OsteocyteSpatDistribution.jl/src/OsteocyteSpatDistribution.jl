@@ -2,6 +2,7 @@ module OsteocyteSpatDistribution
 using Random
 using LinearAlgebra
 using CairoMakie
+using OrderedCollections
 using Revise
 
 include("../Synthetic/custom_data_structs.jl")

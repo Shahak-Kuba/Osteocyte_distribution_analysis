@@ -5,10 +5,12 @@ using CairoMakie
 using OrderedCollections
 using Revise
 
-include("../Synthetic/custom_data_structs.jl")
+include("DataStructs.jl")
 include("../Synthetic/generate_synthetic_osteocytes.jl")
-include("EdgeCorrection.jl")
+include("../Synthetic/Synthetic_plotting.jl")
+#include("../Synthetic/generate_synthetic_osteocytes.jl")
+#include("EdgeCorrection.jl")
 include("pcf.jl")
-include("CellRayTracing.jl")
+#include("CellRayTracing.jl")
 
 end # module OsteocyteSpatDistribution

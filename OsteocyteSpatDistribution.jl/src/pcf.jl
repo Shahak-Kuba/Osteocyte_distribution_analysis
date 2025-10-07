@@ -1,3 +1,10 @@
+function acos2(x, y)
+    # Returns the signed angle between vectors x and y, in [-π, π]
+    angle = acos(clamp(dot(x, y) / (norm(x) * norm(y)), -1.0, 1.0))
+    sign = signbit(x[1]*y[2] - x[2]*y[1]) ? 1 : -1
+    return angle * sign
+end
+
 function est_pcf2(cell::Osteocyte, all_cells:: Vector{Osteocyte}, α, Rmax, ΔR; direction="inward")
     # cell: Osteocyte data struct containing cell information
     # α: angle in radians
@@ -30,6 +37,7 @@ function est_pcf2(cell::Osteocyte, all_cells:: Vector{Osteocyte}, α, Rmax, ΔR;
             dist = norm(vec_to_other)
             # Calculate angle between normal vector and vector to other cell
             angle = acos(clamp(dot(normal_dir, vec_to_other ./ dist), -1.0, 1.0))
+            angle_to_origin = acos(clamp(dot((0,0), vec_to_other ./ dist), -1.0, 1.0))
             if angle < α/2
                 bin_index = Int(floor(dist / ΔR)) + 1  # +1 for 1-based indexing in Julia
                 if bin_index <= n_bins && bin_index > 0  # Ensure the index is within bounds
@@ -49,10 +57,16 @@ function est_pcf2(cells::Vector{Osteocyte}, α, Rmax, ΔR; direction="inward")
     # direction: "inward" or "outward"
     
     pcf_results = []
+    println(" Rmax=$(Rmax) and ΔR=$(ΔR)")
+    count = Int(Rmax / ΔR)
+    @assert count == Int(count) "Rmax must be divisible by ΔR"
+    Radii = LinRange(0, Rmax, count)
+    println(Radii)
     for cell in cells
         pcf = est_pcf2(cell, cells, α, Rmax, ΔR; direction=direction)
         push!(pcf_results, pcf)
     end
-    return pcf_results
+    println(Radii)
+    return pcf_results, Radii
 end 
 
